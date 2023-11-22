@@ -40,7 +40,7 @@ public class Swimmer {
         return competitionHistory;
     }
     public String toString(){
-        return "Name-"+name+" Age- "+age+" Active member- "+membershipActive+" Is a competitive swimmer-"+isCompetitiveSwimmer;
+        return "Name-'"+name+"' Age-'"+age+"' Active member-'"+membershipActive+"' Is a competitive swimmer-'"+isCompetitiveSwimmer+"'"+"\n";
     }
 
 }
