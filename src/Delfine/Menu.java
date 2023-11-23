@@ -18,21 +18,21 @@ public class Menu {
 
     public void createSwimmer() {
         String discipline = "Null";
+        String name;
         System.out.println("Whats the name of the swimmer? (Full name)");
-        String name = scanner.nextLine();
-        System.out.println("Whats the age of the swimmer? (In years)");
-        int age = Integer.parseInt(scanner.nextLine()); // Scanner bug
-
-        System.out.println("Is the swimmer a competitive swimmer? (yes/no)");
-        boolean isCompetitiveSwimmer = scanner.nextLine().equalsIgnoreCase("yes");
-
+        name = scanner.nextLine();
 
         for (Swimmer swimmer : swimmers) {
             if (name.equalsIgnoreCase(swimmer.getName())) {
                 System.out.println("Name already taken. Please start over.");
-                return;
+                run();
             }
         }
+        System.out.println("Whats the age of the swimmer? (In years)");
+        int age = scanner.nextInt();
+        scanner.nextLine();
+        System.out.println("Is the swimmer a competitive swimmer? (yes/no)");
+        boolean isCompetitiveSwimmer = scanner.nextLine().equalsIgnoreCase("yes");
 
         System.out.println("What is the swimmers main discipline?" +
                 "\n 1. Crawl" +
@@ -126,15 +126,16 @@ public class Menu {
             }
             case 2->{
                 System.out.println("Whats the age you want to search?");
+                boolean swimmerFound = false;
                 int age = scanner.nextInt();
                 for (Swimmer swimmer : swimmers){
                     if (age==swimmer.getAge()){
                         System.out.println(swimmer);
-                    }else{
-                        System.out.println("Nothing found, try again");
-                        search();
+                        swimmerFound = true;
                     }
-                }run();
+                }
+                if (!swimmerFound) System.out.println("Swimmer by that name not found in system");
+                run();
             }
             case 3->{
                 for (Swimmer swimmer : swimmers){
@@ -465,12 +466,14 @@ public class Menu {
         filteredResults.sort(Comparator.comparingDouble(Result::getTime));
         // printer de bedste 5 resultater
         int count = 0;
+        System.out.println("_________");
         for (Result result : filteredResults) {
             if (count < 5) {
                 System.out.println("Name: " + result.getSwimmerName() +
                         ", Time: " + result.getTime() +
                         " minutes, Date: " + result.getCompetition().getDate() +
-                        ", Competition: " + result.getCompetition().getNameCompetition());
+                        ", Competition: " + result.getCompetition().getNameCompetition()+
+                        "\n_________");
                 count++;
             }
         }
