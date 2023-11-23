@@ -445,7 +445,7 @@ public class Menu {
                 competitionOptions();
             }
         };
-
+        // lav et nyt array filteredResults.,. Alle resultater bliver lagt her ind
         ArrayList<Result> filteredResults = new ArrayList<>();
         for (Competition competition : competitions) {
             for (Result result : competition.getResults()) {
@@ -462,9 +462,9 @@ public class Menu {
                 }
             }
         }
-
+        // sotering af alle resultater så de kommer i rækkefølge efter best tid
         Collections.sort(filteredResults, Comparator.comparingDouble(Result::getTime));
-
+        // printer de bedste 5 resultater
         int count = 0;
         for (Result result : filteredResults) {
             if (count < 5) {
@@ -473,8 +473,6 @@ public class Menu {
                         " minutes, Date: " + result.getCompetition().getDate() +
                         ", Competition: " + result.getCompetition().getNameCompetition());
                 count++;
-            } else {
-                break;
             }
         }
 
