@@ -2,7 +2,6 @@ package Delfine;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.Scanner;
 
@@ -463,7 +462,7 @@ public class Menu {
             }
         }
         // sotering af alle resultater så de kommer i rækkefølge efter best tid
-        Collections.sort(filteredResults, Comparator.comparingDouble(Result::getTime));
+        filteredResults.sort(Comparator.comparingDouble(Result::getTime));
         // printer de bedste 5 resultater
         int count = 0;
         for (Result result : filteredResults) {
