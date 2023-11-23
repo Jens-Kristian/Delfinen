@@ -1,4 +1,42 @@
 package Delfine;
+
+import java.util.Scanner;
+
+public class Login {
+    public void performLogin() {
+        int maxAttempts = 3;
+        String correctCode = "justdrown";
+
+        try (Scanner scanner = new Scanner(System.in)) {
+            for (int attempts = 1; attempts <= maxAttempts; attempts++) {
+                System.out.print("Log in: ");
+                String userCode = scanner.nextLine();
+
+                if (userCode.equals(correctCode)) {
+                    System.out.println("Welcome!");
+                    break;
+                } else if (attempts < maxAttempts) {
+                    System.out.println("Login failed. Try again.");
+                } else {
+                    System.out.print("For your own safety, enter validationcode: ");
+                    String securityCode = scanner.nextLine();
+
+                    String correctSecurityCode = "theydrowned";
+
+                    if (securityCode.equals(correctSecurityCode)) {
+
+                        System.out.println("Welcome!");
+                        Menu menu = new Menu();
+                        menu.run();
+                    } else {
+                        System.out.println("Login failed.");
+                    }
+                }
+            }
+        }
+    }
+}
+
 /*
 public class Login {
 

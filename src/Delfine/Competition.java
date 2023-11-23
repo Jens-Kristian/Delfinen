@@ -1,13 +1,14 @@
 package Delfine;
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
+
 
 public class Competition {
     private String nameCompetition;
-    private Date date;
+    private LocalDate date;
     private ArrayList<Result> results;
 
-    public Competition(String nameCompetition, Date date) {
+    public Competition(String nameCompetition, LocalDate date) {
         this.nameCompetition = nameCompetition;
         this.date = date;
         this.results = new ArrayList<>();
@@ -21,11 +22,15 @@ public class Competition {
         return nameCompetition;
     }
 
-    public Date getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
     public ArrayList<Result> getResults() {
         return results;
+    }
+
+    public String toString(){
+        return nameCompetition + date + results;
     }
 }
