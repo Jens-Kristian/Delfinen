@@ -1,38 +1,39 @@
-package Delfine;
-
+package Delfinen;
 import java.util.Scanner;
 
 public class Login {
-    public void performLogin() {
+    public boolean authenticateUser() {
         int maxAttempts = 3;
         String correctCode = "justdrown";
+        String correctSecurityCode = "theydrowned";
 
-        try (Scanner scanner = new Scanner(System.in)) {
-            for (int attempts = 1; attempts <= maxAttempts; attempts++) {
-                System.out.print("Log in: ");
-                String userCode = scanner.nextLine();
+        Scanner scanner = new Scanner(System.in);
 
-                if (userCode.equals(correctCode)) {
+        for (int attempts = 1; attempts <= maxAttempts; attempts++) {
+            System.out.print("Log in: ");
+            String userCode = scanner.nextLine();
+
+            if (userCode.equals(correctCode)) {
+                System.out.println("User authenticated. Proceed to main menu.");
+                return true;
+            } else if (attempts < maxAttempts) {
+                System.out.println("Login failed. Try again.");
+            } else {
+                // Hvis det er tredje forsøg, kræv en sikkerhedskode
+                System.out.print("For your own safety, enter validation code: ");
+                String securityCode = scanner.nextLine();
+
+                if (securityCode.equals(correctSecurityCode)) {
                     System.out.println("Welcome!");
-                    break;
-                } else if (attempts < maxAttempts) {
-                    System.out.println("Login failed. Try again.");
+                    return true;
                 } else {
-                    System.out.print("For your own safety, enter validationcode: ");
-                    String securityCode = scanner.nextLine();
-
-                    String correctSecurityCode = "theydrowned";
-
-                    if (securityCode.equals(correctSecurityCode)) {
-
-                        System.out.println("Welcome!");
-
-                    } else {
-                        System.out.println("Login failed.");
-                    }
+                    System.out.println("Login failed.");
+                    break;
                 }
             }
         }
+        scanner.close();
+        return false;
     }
 }
 
