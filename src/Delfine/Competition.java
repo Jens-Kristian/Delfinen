@@ -4,9 +4,10 @@ import java.util.ArrayList;
 
 
 public class Competition {
-    private String nameCompetition;
-    private LocalDate date;
-    private ArrayList<Result> results;
+    public String nameCompetition;
+    public LocalDate date;
+    public ArrayList<Result> results;
+
 
     public Competition(String nameCompetition, LocalDate date) {
         this.nameCompetition = nameCompetition;

@@ -26,8 +26,7 @@ public class Login {
                     if (securityCode.equals(correctSecurityCode)) {
 
                         System.out.println("Welcome!");
-                        Menu menu = new Menu();
-                        menu.run();
+
                     } else {
                         System.out.println("Login failed.");
                     }

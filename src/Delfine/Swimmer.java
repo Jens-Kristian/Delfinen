@@ -3,13 +3,14 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class Swimmer {
-    private String name;
-    private int age;
-    private Boolean membershipActive;
-    private boolean isCompetitiveSwimmer;
-    private ArrayList<Result> competitionHistory;
+    public  String name;
+    public int age;
+    public Boolean membershipActive;
+    public boolean isCompetitiveSwimmer;
+    public ArrayList<Result> competitionHistory;
+    public String discipline;
+    public LocalDate localDate;
 
-    private String discipline;
 
     public Swimmer(String name, int age, Boolean membershipActive, boolean isCompetitiveSwimmer, String discipline, LocalDate localDate) {
         this.name = name;
@@ -46,14 +47,6 @@ public class Swimmer {
 
     public void setAge(int age) {
         this.age = age;
-    }
-
-    public void setMembershipActive(Boolean membershipActive) {
-        this.membershipActive = membershipActive;
-    }
-
-    public void setCompetitiveSwimmer(boolean competitiveSwimmer) {
-        isCompetitiveSwimmer = competitiveSwimmer;
     }
 
     public boolean isCompetitiveSwimmer() {
