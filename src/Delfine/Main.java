@@ -1,5 +1,5 @@
 package Delfine;
-import Delfinen.Login;
+
 public class Main {
     public static void main(String[] args) {
 
@@ -7,7 +7,6 @@ public class Main {
         boolean isAuthenticated = login.authenticateUser();
 
         if (isAuthenticated) {
-            System.out.println("Welcome!.");
             CompertitionOperation compertitionOperation = new CompertitionOperation();
             SwimmerOperation swimmerOperation = new SwimmerOperation();
             Menu menu = new Menu(compertitionOperation, swimmerOperation);

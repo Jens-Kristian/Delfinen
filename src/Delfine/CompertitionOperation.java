@@ -5,21 +5,20 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Scanner;
 
-public class CompertitionOperation {
+public class CompertitionOperation{
 
     Scanner scanner = new Scanner(System.in);
-    public ArrayList<Swimmer> swimmers;
-    public ArrayList<Competition> competitions;
+    private ArrayList<Swimmer> swimmers;
+    private ArrayList<Competition> competitions;
     private Menu menu;
 
     public void setMenu(Menu menu) {
         this.menu = menu;
     }
-
-
     public CompertitionOperation() {
-        swimmers = new ArrayList<>();
-        competitions = new ArrayList<>();
+        FileHandling fileHandling = FileHandling.getInstance();
+        this.swimmers = fileHandling.swimmers;
+        this.competitions = fileHandling.competitions;
     }
     public void competitionOptions() {
             System.out.println("Competition Options:" +
@@ -59,6 +58,7 @@ public class CompertitionOperation {
         Competition newCompetition = new Competition(name, localDate);
         competitions.add(newCompetition);
         System.out.println("New competition "+name+" is created, date:"+localDate);
+        competitionOptions();
     }
     public void viewAllCompetitions(){
         for (Competition competition : competitions){
@@ -66,6 +66,7 @@ public class CompertitionOperation {
                 System.out.println(competition);
             }
         }
+        competitionOptions();
     }
     public void addResultsToCompetition() {
         System.out.println("Enter the name of the competition:");
@@ -115,6 +116,7 @@ public class CompertitionOperation {
                 System.out.println("Result added successfully.");
             }
         }
+        competitionOptions();
     }
 
     public void viewCompetitionDetails() {
@@ -203,6 +205,7 @@ public class CompertitionOperation {
         if (count == 0) {
             System.out.println("No results found for this discipline.");
         }
+        competitionOptions();
     }
 
 }

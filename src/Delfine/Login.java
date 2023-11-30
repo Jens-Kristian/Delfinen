@@ -1,4 +1,4 @@
-package Delfinen;
+package Delfine;
 import java.util.Scanner;
 
 public class Login {

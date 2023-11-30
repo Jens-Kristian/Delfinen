@@ -5,8 +5,8 @@ import java.util.Scanner;
 public class Menu {
 
     public Scanner scanner = new Scanner(System.in);
-    private CompertitionOperation compertitionOperation;
-    private SwimmerOperation swimmerOperation;
+    public CompertitionOperation compertitionOperation;
+    public SwimmerOperation swimmerOperation;
 
     public Menu(CompertitionOperation compertitionOperation, SwimmerOperation swimmerOperation) {
         this.compertitionOperation = compertitionOperation;

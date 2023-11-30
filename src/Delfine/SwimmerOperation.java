@@ -4,23 +4,21 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class SwimmerOperation {
+public class SwimmerOperation{
     Scanner scanner = new Scanner(System.in);
     public ArrayList<Swimmer> swimmers;
     public ArrayList<Competition> competitions;
-    private Menu menu;
-
-    public SwimmerOperation(Menu menu) {
-        this.menu = menu;
-    }
+    public Menu menu;
     public void setMenu(Menu menu) {
         this.menu = menu;
     }
 
     public SwimmerOperation() {
-        swimmers = new ArrayList<>();
-        competitions = new ArrayList<>();
+        FileHandling fileHandling = FileHandling.getInstance();
+        this.swimmers = fileHandling.swimmers;
+        this.competitions = fileHandling.competitions;
     }
+
     public void swimmerOptions(){
             System.out.println("What do you wish to do?" +
                     "\n 1. Add new member" +
@@ -80,6 +78,7 @@ public class SwimmerOperation {
         Swimmer newSwimmer = new Swimmer(name, age, true, isCompetitiveSwimmer, discipline, LocalDate.now());
         swimmers.add(newSwimmer);
         System.out.println("Swimmer added successfully.");
+        swimmerOptions();
     }
 
     public void deleteSwimmer(){
@@ -112,6 +111,7 @@ public class SwimmerOperation {
                 System.out.println("No training time recorded");
             }
             System.out.println("_______________");
+            swimmerOptions();
         }
     }
 
@@ -219,6 +219,7 @@ public class SwimmerOperation {
                         int age = scanner.nextInt();
                         swimmer.setAge(age);
                         System.out.println(swimmer.getName()+" updated age to "+age);
+                        swimmerOptions();
                     }
                     case 2 -> {
                         boolean activePasiv = swimmer.getMembershipActive();
@@ -230,6 +231,7 @@ public class SwimmerOperation {
                             pasivActive = "active";
                         }
                         System.out.println(swimmer.getName()+" is now "+pasivActive);
+                        swimmerOptions();
                     }
                     case 3 -> {
                         boolean competitive = swimmer.isCompetitiveSwimmer();
@@ -241,6 +243,7 @@ public class SwimmerOperation {
                             competitiveMotion = "competitive";
                         }
                         System.out.println(swimmer.getName()+" is now "+competitiveMotion+" swimmer");
+                        swimmerOptions();
                     }
                     case 4 -> {
                         System.out.println("What is the swimmers main discipline?" +
@@ -259,6 +262,7 @@ public class SwimmerOperation {
                         }
                         swimmer.setDiscipline(discipline);
                         System.out.println(swimmer.getName()+" new main discipline is "+discipline);
+                        swimmerOptions();
                     }
 
                 }
@@ -301,7 +305,7 @@ public class SwimmerOperation {
             case 3 -> discipline = "Butterfly";
             case 4 -> discipline = "Backcrawl";
             case 5 -> discipline = "Megley";
-        };
+        }
 
         System.out.println("What was the time? (in minutes)");
         double time = scanner.nextDouble();
@@ -323,6 +327,7 @@ public class SwimmerOperation {
         selectedSwimmer.addResult(newResult);
 
         System.out.println("New best training time recorded for " + selectedSwimmer.getName());
+        swimmerOptions();
     }
 
 }
