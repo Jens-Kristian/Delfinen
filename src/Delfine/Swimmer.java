@@ -18,6 +18,7 @@ public class Swimmer {
         this.membershipActive = membershipActive;
         this.isCompetitiveSwimmer = isCompetitiveSwimmer;
         this.discipline = discipline;
+        this.localDate = localDate;
         this.competitionHistory = new ArrayList<>();
     }
 
@@ -57,7 +58,7 @@ public class Swimmer {
         return competitionHistory;
     }
     public String toString(){
-        return "Name-'"+name+"' Age-'"+age+"' Active member-'"+membershipActive+"' Is a competitive swimmer-'"+isCompetitiveSwimmer+"' Main disipline-'"+discipline+"'"+"\n";
+        return name+","+age+","+membershipActive+","+isCompetitiveSwimmer+","+discipline+","+localDate;
     }
 
 }

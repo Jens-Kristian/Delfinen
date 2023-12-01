@@ -14,9 +14,7 @@ public class Competition {
         this.date = date;
         this.results = new ArrayList<>();
     }
-    public void addResult(Result result) {
-        results.add(result);
-    }
+    public void addResult(Result result) {results.add(result);}
 
     public String getNameCompetition() {
         return nameCompetition;
@@ -31,6 +29,6 @@ public class Competition {
     }
 
     public String toString(){
-        return nameCompetition + date + results;
+        return nameCompetition + "," + date;
     }
 }

@@ -4,30 +4,34 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class SwimmerOperation{
+public class SwimmerOperation {
     Scanner scanner = new Scanner(System.in);
     public ArrayList<Swimmer> swimmers;
     public ArrayList<Competition> competitions;
+    public ArrayList<Result> results;
     public Menu menu;
+
     public void setMenu(Menu menu) {
         this.menu = menu;
     }
 
+    FileHandling fileHandling = new FileHandling();
+
     public SwimmerOperation() {
-        FileHandling fileHandling = FileHandling.getInstance();
+        this.results = fileHandling.results;
         this.swimmers = fileHandling.swimmers;
         this.competitions = fileHandling.competitions;
     }
 
-    public void swimmerOptions(){
-            System.out.println("What do you wish to do?" +
-                    "\n 1. Add new member" +
-                    "\n 2. Delete member" +
-                    "\n 3. View list off all swimmers" +
-                    "\n 4. Search options" +
-                    "\n 5. Change specifics of certain member" +
-                    "\n 6. Add best traning time" +
-                    "\n 9. Main Menu");
+    public void swimmerOptions() {
+        System.out.println("What do you wish to do?" +
+                "\n 1. Add new member" +
+                "\n 2. Delete member" +
+                "\n 3. View list off all swimmers" +
+                "\n 4. Search options" +
+                "\n 5. Change specifics of certain member" +
+                "\n 6. Add best traning time" +
+                "\n 9. Main Menu");
         int choose = scanner.nextInt();
         scanner.nextLine();
         switch (choose) {
@@ -37,7 +41,9 @@ public class SwimmerOperation{
             case 4 -> search();
             case 5 -> changeSwimmerAtribute();
             case 6 -> newBestTrainingTime();
-            case 9 -> menu.run();
+            case 9 -> {
+                menu.run();
+            }
         }
     }
 
@@ -47,7 +53,7 @@ public class SwimmerOperation{
         System.out.println("Whats the name of the swimmer? (Full name)");
         name = scanner.nextLine();
 
-        for (Swimmer swimmer : swimmers) {
+        for (Swimmer swimmer : fileHandling.swimmers) {
             if (name.equalsIgnoreCase(swimmer.getName())) {
                 System.out.println("Name already taken. Please start over.");
                 menu.run();
@@ -66,38 +72,46 @@ public class SwimmerOperation{
                 "\n 4. Backcrawl" +
                 "\n 5. Megley");
         int choose = scanner.nextInt();
-        switch (choose){
+        switch (choose) {
             case 1 -> discipline = "Crawl";
             case 2 -> discipline = "Breaststroke";
             case 3 -> discipline = "Butterfly";
             case 4 -> discipline = "Backcrawl";
             case 5 -> discipline = "Megley";
         }
-
+        LocalDate localDate = LocalDate.now();
         //Går ud fra alle nye svømmere ikke starter med at være passive
-        Swimmer newSwimmer = new Swimmer(name, age, true, isCompetitiveSwimmer, discipline, LocalDate.now());
-        swimmers.add(newSwimmer);
+        Swimmer newSwimmer = new Swimmer(name, age, true, isCompetitiveSwimmer, discipline, localDate);
+        fileHandling.swimmers.add(newSwimmer);
+        fileHandling.saveSwimmersToTxtFile();
         System.out.println("Swimmer added successfully.");
         swimmerOptions();
     }
 
-    public void deleteSwimmer(){
+    public void deleteSwimmer() {
+        boolean swimmerFound = false;
         System.out.println("Whats the name off the swimmer ('9' to exit)");
         String name = scanner.nextLine();
         if (name.equals("9")) swimmerOptions();
-        for (Swimmer swimmer : swimmers){
-            if (name.equalsIgnoreCase(swimmer.getName())){
-                System.out.println(swimmer);
-            }else{
-                System.out.println("Swimmer not found, try again");
-                deleteSwimmer();
+        for (Swimmer swimmer : fileHandling.swimmers) {
+            if (name.equalsIgnoreCase(swimmer.getName())) {
+                swimmerFound = true;
+                System.out.println("Are you sure you want to delete " + swimmer.getName() + "? Y/N");
+                String yesNo = scanner.nextLine();
+                if (yesNo.equalsIgnoreCase("y")) {
+                    fileHandling.swimmers.remove(swimmer);
+                    fileHandling.saveSwimmersToTxtFile();
+                    System.out.println("Deletion successful");
+                } else System.out.println("Deletion cancelled");
             }
-        }swimmerOptions();
+        }
+        if (!swimmerFound) System.out.println("Swimmer not found");
+        swimmerOptions();
     }
 
     public void fullMemberList() {
         System.out.println("_______________");
-        for (Swimmer swimmer : swimmers) {
+        for (Swimmer swimmer : fileHandling.swimmers) {
             System.out.println("Name: " + swimmer.getName());
             System.out.println("Age: " + swimmer.getAge());
             System.out.println("Active Member: " + swimmer.getMembershipActive());
@@ -111,8 +125,8 @@ public class SwimmerOperation{
                 System.out.println("No training time recorded");
             }
             System.out.println("_______________");
-            swimmerOptions();
         }
+        swimmerOptions();
     }
 
     public Result findBestTrainingTime(Swimmer swimmer) {
@@ -127,7 +141,7 @@ public class SwimmerOperation{
     }
 
 
-    public void search(){
+    public void search() {
         int chosenNumber;
         System.out.println("What do you want to search by?" +
                 "\n 1. Name" +
@@ -138,25 +152,26 @@ public class SwimmerOperation{
                 "\n 9. Exit");
         chosenNumber = scanner.nextInt();
         scanner.nextLine(); //scanner bug
-        switch (chosenNumber){
-            case 1->{
+        switch (chosenNumber) {
+            case 1 -> {
                 System.out.println("Whats the name you want to search?");
                 String name = scanner.nextLine();
-                for (Swimmer swimmer : swimmers){
-                    if (name.equalsIgnoreCase(swimmer.getName())){
+                for (Swimmer swimmer : fileHandling.swimmers) {
+                    if (name.equalsIgnoreCase(swimmer.getName())) {
                         System.out.println(swimmer);
-                    }else{
+                    } else {
                         System.out.println("Name not found in system, try again");
                         search();
                     }
-                }swimmerOptions();
+                }
+                swimmerOptions();
             }
-            case 2->{
+            case 2 -> {
                 System.out.println("Whats the age you want to search?");
                 boolean swimmerFound = false;
                 int age = scanner.nextInt();
-                for (Swimmer swimmer : swimmers){
-                    if (age==swimmer.getAge()){
+                for (Swimmer swimmer : fileHandling.swimmers) {
+                    if (age == swimmer.getAge()) {
                         System.out.println(swimmer);
                         swimmerFound = true;
                     }
@@ -164,48 +179,53 @@ public class SwimmerOperation{
                 if (!swimmerFound) System.out.println("Swimmer by that name not found in system");
                 swimmerOptions();
             }
-            case 3->{
-                for (Swimmer swimmer : swimmers){
-                    if (swimmer.isCompetitiveSwimmer()){
+            case 3 -> {
+                for (Swimmer swimmer : fileHandling.swimmers) {
+                    if (swimmer.isCompetitiveSwimmer()) {
                         System.out.println(swimmer);
-                    }else{
+                    } else {
                         System.out.println("No competitive swimmers found, try again");
                         search();
                     }
-                }swimmerOptions();
+                }
+                swimmerOptions();
             }
-            case 4->{
-                for (Swimmer swimmer : swimmers){
-                    if (swimmer.getMembershipActive()){
+            case 4 -> {
+                for (Swimmer swimmer : fileHandling.swimmers) {
+                    if (swimmer.getMembershipActive()) {
                         System.out.println(swimmer);
-                    }else {
+                    } else {
                         System.out.println("No active member found, try again");
                         search();
                     }
-                }swimmerOptions();
+                }
+                swimmerOptions();
             }
-            case 5->{
-                for (Swimmer swimmer : swimmers){
-                    if (!swimmer.getMembershipActive()){
+            case 5 -> {
+                for (Swimmer swimmer : fileHandling.swimmers) {
+                    if (!swimmer.getMembershipActive()) {
                         System.out.println(swimmer);
-                    }else {
+                    } else {
                         System.out.println("No inactive member found, try again");
                         search();
                     }
-                }swimmerOptions();
+                }
+                swimmerOptions();
             }
         }
     }
 
-    public void changeSwimmerAtribute(){
+    public void changeSwimmerAtribute() {
         String pasivActive = "null";
         String competitiveMotion = "null";
         String discipline = "null";
+        boolean swimmerFound = false;
         System.out.println("Whats the name of the member you what to change? (9 for exit)");
         String name = scanner.nextLine();
         if (name.equals("9")) swimmerOptions();
-        for (Swimmer swimmer : swimmers){
-            if (name.equalsIgnoreCase(swimmer.getName())){
+        for (Swimmer swimmer : fileHandling.swimmers) {
+            if (name.equalsIgnoreCase(swimmer.getName())) {
+                swimmerFound = true;
                 System.out.println(swimmer);
                 System.out.println("What attribute do you what to change?" +
                         "\n 1. age" +
@@ -213,36 +233,39 @@ public class SwimmerOperation{
                         "\n 3. Competitive Swimmer / Motion Swimmer" +
                         "\n 4. Main discipline");
                 int choose = scanner.nextInt();
-                switch (choose){
+                switch (choose) {
                     case 1 -> {
                         System.out.println("What is the new age?");
                         int age = scanner.nextInt();
                         swimmer.setAge(age);
-                        System.out.println(swimmer.getName()+" updated age to "+age);
+                        fileHandling.saveSwimmersToTxtFile();
+                        System.out.println(swimmer.getName() + " updated age to " + age);
                         swimmerOptions();
                     }
                     case 2 -> {
                         boolean activePasiv = swimmer.getMembershipActive();
-                        if (activePasiv){
+                        if (activePasiv) {
                             activePasiv = false;
                             pasivActive = "pasiv";
-                        } else{
+                        } else {
                             activePasiv = true;
                             pasivActive = "active";
                         }
-                        System.out.println(swimmer.getName()+" is now "+pasivActive);
+                        fileHandling.saveSwimmersToTxtFile();
+                        System.out.println(swimmer.getName() + " is now " + pasivActive);
                         swimmerOptions();
                     }
                     case 3 -> {
                         boolean competitive = swimmer.isCompetitiveSwimmer();
-                        if (competitive){
+                        if (competitive) {
                             competitive = false;
                             competitiveMotion = "Motion";
-                        }else {
+                        } else {
                             competitive = true;
                             competitiveMotion = "competitive";
                         }
-                        System.out.println(swimmer.getName()+" is now "+competitiveMotion+" swimmer");
+                        fileHandling.saveSwimmersToTxtFile();
+                        System.out.println(swimmer.getName() + " is now " + competitiveMotion + " swimmer");
                         swimmerOptions();
                     }
                     case 4 -> {
@@ -253,7 +276,7 @@ public class SwimmerOperation{
                                 "\n 4. Backcrawl" +
                                 "\n 5. Megley");
                         int choose2 = scanner.nextInt();
-                        switch (choose2){
+                        switch (choose2) {
                             case 1 -> discipline = "Crawl";
                             case 2 -> discipline = "Breaststroke";
                             case 3 -> discipline = "Butterfly";
@@ -261,15 +284,17 @@ public class SwimmerOperation{
                             case 5 -> discipline = "Megley";
                         }
                         swimmer.setDiscipline(discipline);
-                        System.out.println(swimmer.getName()+" new main discipline is "+discipline);
+                        fileHandling.saveSwimmersToTxtFile();
+                        System.out.println(swimmer.getName() + " new main discipline is " + discipline);
                         swimmerOptions();
                     }
 
                 }
-            }else{
-                System.out.println("Swimmer not found, try again");
-                changeSwimmerAtribute();
             }
+        }
+        if (!swimmerFound) {
+            System.out.println("Swimmer wasn't found, try again");
+            changeSwimmerAtribute();
         }
     }
 
@@ -279,7 +304,7 @@ public class SwimmerOperation{
         if (name.equals("9")) swimmerOptions();
 
         Swimmer selectedSwimmer = null;
-        for (Swimmer swimmer : swimmers) {
+        for (Swimmer swimmer : fileHandling.swimmers) {
             if (name.equalsIgnoreCase(swimmer.getName())) {
                 selectedSwimmer = swimmer;
             }
@@ -322,12 +347,13 @@ public class SwimmerOperation{
 
         LocalDate localDate = LocalDate.of(year, month, day);
         Competition newCompetition = new Competition("Training", localDate);
-        competitions.add(newCompetition);
+        fileHandling.competitions.add(newCompetition);
         Result newResult = new Result(selectedSwimmer.getName(), 0, time, discipline, newCompetition);
         selectedSwimmer.addResult(newResult);
-
+        fileHandling.results.add(newResult);
+        fileHandling.saveResultsToTxtFile();
+        fileHandling.saveCompetitionsToTxtFile();
         System.out.println("New best training time recorded for " + selectedSwimmer.getName());
         swimmerOptions();
     }
-
 }

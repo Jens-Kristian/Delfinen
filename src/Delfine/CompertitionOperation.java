@@ -8,15 +8,17 @@ import java.util.Scanner;
 public class CompertitionOperation{
 
     Scanner scanner = new Scanner(System.in);
-    private ArrayList<Swimmer> swimmers;
-    private ArrayList<Competition> competitions;
+    public ArrayList<Swimmer> swimmers;
+    public ArrayList<Competition> competitions;
+    public ArrayList<Result> results;
     private Menu menu;
 
     public void setMenu(Menu menu) {
         this.menu = menu;
     }
+    FileHandling fileHandling = new FileHandling();
     public CompertitionOperation() {
-        FileHandling fileHandling = FileHandling.getInstance();
+        this.results = fileHandling.results;
         this.swimmers = fileHandling.swimmers;
         this.competitions = fileHandling.competitions;
     }
@@ -37,7 +39,9 @@ public class CompertitionOperation{
                 case 3 -> addResultsToCompetition();
                 case 4 -> viewCompetitionDetails();
                 case 5 -> viewBestTimes();
-                case 9 -> menu.run();
+                case 9 -> {
+                    menu.run();
+                }
                 default -> {
                     System.out.println("Invalid choice, please try again.");
                     competitionOptions();
@@ -56,12 +60,13 @@ public class CompertitionOperation{
         int year = scanner.nextInt();
         LocalDate localDate = LocalDate.of(year, month, day);
         Competition newCompetition = new Competition(name, localDate);
-        competitions.add(newCompetition);
+        fileHandling.competitions.add(newCompetition);
+        fileHandling.saveCompetitionsToTxtFile();
         System.out.println("New competition "+name+" is created, date:"+localDate);
         competitionOptions();
     }
     public void viewAllCompetitions(){
-        for (Competition competition : competitions){
+        for (Competition competition : fileHandling.competitions){
             if (!competition.getNameCompetition().equalsIgnoreCase("Training")){
                 System.out.println(competition);
             }
@@ -74,7 +79,7 @@ public class CompertitionOperation{
 
         boolean competitionFound = false;
         Competition selectedCompetition = null;
-        for (Competition competition : competitions) {
+        for (Competition competition : fileHandling.competitions) {
             if (competition.getNameCompetition().equalsIgnoreCase(competitionName)) {
                 selectedCompetition = competition;
                 competitionFound = true;
@@ -89,7 +94,7 @@ public class CompertitionOperation{
 
             boolean swimmerFound = false;
             Swimmer selectedSwimmer = null;
-            for (Swimmer swimmer : swimmers) {
+            for (Swimmer swimmer : fileHandling.swimmers) {
                 if (swimmer.getName().equalsIgnoreCase(swimmerName)) {
                     selectedSwimmer = swimmer;
                     swimmerFound = true;
@@ -112,7 +117,7 @@ public class CompertitionOperation{
                 Result newResult = new Result(swimmerName, placement, time, discipline, selectedCompetition);
                 selectedCompetition.addResult(newResult);
                 selectedSwimmer.addResult(newResult);
-
+                fileHandling.saveResultsToTxtFile();
                 System.out.println("Result added successfully.");
             }
         }
@@ -124,7 +129,7 @@ public class CompertitionOperation{
         String competitionName = scanner.nextLine();
 
         boolean competitionFound = false;
-        for (Competition competition : competitions) {
+        for (Competition competition : fileHandling.competitions) {
             if (competition.getNameCompetition().equalsIgnoreCase(competitionName)) {
                 competitionFound = true;
                 System.out.println("Competition Name: " + competition.getNameCompetition());
@@ -171,14 +176,14 @@ public class CompertitionOperation{
         }
         // lav et nyt array filteredResults.,. Alle resultater bliver lagt her ind
         ArrayList<Result> filteredResults = new ArrayList<>();
-        for (Competition competition : competitions) {
+        for (Competition competition : fileHandling.competitions) {
             for (Result result : competition.getResults()) {
                 if (result.getDiscipline().equalsIgnoreCase(selectedDiscipline)) {
                     filteredResults.add(result);
                 }
             }
         }
-        for (Swimmer swimmer : swimmers) {
+        for (Swimmer swimmer : fileHandling.swimmers) {
             for (Result result : swimmer.getCompetitionHistory()) {
                 if (result.getCompetition().getNameCompetition().equalsIgnoreCase("Training") &&
                         result.getDiscipline().equalsIgnoreCase(selectedDiscipline)) {
@@ -186,7 +191,7 @@ public class CompertitionOperation{
                 }
             }
         }
-        // sotering af alle resultater så de kommer i rækkefølge efter best tid
+        // sotering af alle resultater så de kommer i rækkefølge efter hurtigst tid
         filteredResults.sort(Comparator.comparingDouble(Result::getTime));
         // printer de bedste 5 resultater
         int count = 0;

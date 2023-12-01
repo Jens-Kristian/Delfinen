@@ -12,12 +12,6 @@ public class Menu {
         this.compertitionOperation = compertitionOperation;
         this.swimmerOperation = swimmerOperation;
     }
-    public void setSwimmerOperation(SwimmerOperation swimmerOperation) {
-        this.swimmerOperation = swimmerOperation;
-    }
-    public void setCompertitionOperation(CompertitionOperation compertitionOperation) {
-        this.compertitionOperation = compertitionOperation;
-    }
 
     public void printMenu(){
         System.out.println("What do you wish to do?" +
