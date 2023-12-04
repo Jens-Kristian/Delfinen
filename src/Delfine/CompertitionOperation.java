@@ -136,19 +136,23 @@ public class CompertitionOperation{
         for (Competition competition : fileHandling.competitions) {
             if (competition.getNameCompetition().equalsIgnoreCase(competitionName)) {
                 competitionFound = true;
+                System.out.println("_______________");
                 System.out.println("Competition Name: " + competition.getNameCompetition());
                 System.out.println("Competition Date: " + competition.getDate());
+
 
                 if (competition.getResults().isEmpty()) {
                     System.out.println("No results recorded for this competition.");
                 } else {
                     System.out.println("Results:");
+                    System.out.println("_______________");
+
                     for (Result result : competition.getResults()) {
                         System.out.println("Swimmer: " + result.getSwimmerName());
                         System.out.println("Discipline: " + result.getDiscipline());
                         System.out.println("Time: " + result.getTime());
                         System.out.println("Placement: " + result.getPlacement());
-                        System.out.println();
+                        System.out.println("_______________");
                     }
                 }
             }
