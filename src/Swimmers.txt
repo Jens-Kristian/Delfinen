@@ -1,0 +1,2 @@
+jens,2,true,true,Crawl,2023-12-02
+test,222,true,false,Crawl,2023-12-02

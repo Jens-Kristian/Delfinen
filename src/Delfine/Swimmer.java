@@ -19,7 +19,7 @@ public class Swimmer {
         this.isCompetitiveSwimmer = isCompetitiveSwimmer;
         this.discipline = discipline;
         this.localDate = localDate;
-        this.competitionHistory = new ArrayList<>();
+        this.competitionHistory = competitionHistory;
     }
 
     public void addResult(Result result) {
@@ -54,9 +54,8 @@ public class Swimmer {
         return isCompetitiveSwimmer;
     }
 
-    public ArrayList<Result> getCompetitionHistory() {
-        return competitionHistory;
-    }
+    public ArrayList<Result> getCompetitionHistory(){return competitionHistory;}
+
     public String toString(){
         return name+","+age+","+membershipActive+","+isCompetitiveSwimmer+","+discipline+","+localDate;
     }

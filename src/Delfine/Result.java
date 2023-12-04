@@ -35,6 +35,7 @@ public class Result {
         return competition;
     }
 
+
     public String toString() {
         return swimmerName + "," + placement + "," + time + "," + discipline + "," + competition.getNameCompetition() + "," + competition.getDate();
     }

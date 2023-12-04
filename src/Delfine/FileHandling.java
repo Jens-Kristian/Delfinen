@@ -59,6 +59,7 @@ public class FileHandling {
         try {
             Scanner scanner = new Scanner(file);
             while (scanner.hasNextLine()) {
+                boolean swimmerIsDuplicate = false;
                 String line = scanner.nextLine();
                 String[] attributes = line.split(",");
 
@@ -68,9 +69,15 @@ public class FileHandling {
                 boolean isCompetitiveSwimmer = Boolean.parseBoolean(attributes[3]);
                 String discipline = attributes[4];
                 LocalDate localDate = LocalDate.parse(attributes[5]);
-
-                Swimmer swimmer = new Swimmer(name, age, membershipActive, isCompetitiveSwimmer, discipline, localDate);
-                swimmers.add(swimmer);
+                for (Swimmer testDuplicateSwimmer : swimmers){
+                    if (testDuplicateSwimmer.getName().equalsIgnoreCase(name)){
+                        swimmerIsDuplicate = true;
+                    }
+                }
+                if (!swimmerIsDuplicate){
+                    Swimmer swimmer = new Swimmer(name, age, membershipActive, isCompetitiveSwimmer, discipline, localDate);
+                    swimmers.add(swimmer);
+                }
             }
             scanner.close();
         } catch (FileNotFoundException e) {
@@ -83,14 +90,22 @@ public class FileHandling {
         try {
             Scanner scanner = new Scanner(file);
             while (scanner.hasNextLine()) {
+                boolean competitionIsDuplicate = false;
                 String line = scanner.nextLine();
                 String[] attributes = line.split(",");
 
                 String nameCompetition = attributes[0];
                 LocalDate date = LocalDate.parse(attributes[1]);
 
-                Competition competition = new Competition(nameCompetition, date);
-                competitions.add(competition);
+                for (Competition testDuplicateCompetitions : competitions){
+                    if (testDuplicateCompetitions.getNameCompetition().equalsIgnoreCase(nameCompetition) && testDuplicateCompetitions.getDate().equals(date)){
+                        competitionIsDuplicate = true;
+                    }
+                }
+                if (!competitionIsDuplicate){
+                    Competition competition = new Competition(nameCompetition, date);
+                    competitions.add(competition);
+                }
             }
             scanner.close();
         } catch (FileNotFoundException e) {
@@ -102,6 +117,7 @@ public class FileHandling {
         try {
             Scanner scanner = new Scanner(file);
             while (scanner.hasNextLine()) {
+                boolean resultIsDuplicate = false;
                 String line = scanner.nextLine();
                 String[] attributes = line.split(",");
 
@@ -112,12 +128,26 @@ public class FileHandling {
                 String competitionName = attributes[4];
                 LocalDate competitionDate = LocalDate.parse(attributes[5]);
 
-                Competition competition = findCompetitionByNameAndDate(competitionName, competitionDate);
-                if (competition != null) {
-                    Result result = new Result(swimmerName, placement, time, discipline, competition);
-                    results.add(result);
+                for (Result testDuplicateResult : results) {
+                    if (testDuplicateResult.getSwimmerName().equalsIgnoreCase(swimmerName) && testDuplicateResult.getCompetition().getNameCompetition().equalsIgnoreCase(competitionName)) {
+                        resultIsDuplicate = true;
+                    }
+                }
+                if (!resultIsDuplicate) {
+                    Competition competition = findCompetitionByNameAndDate(competitionName, competitionDate);
+                    if (competition != null) {
+                        Result result = new Result(swimmerName, placement, time, discipline, competition);
+                        results.add(result);
+                        for (Swimmer swimmer : swimmers){
+                            if (swimmer.getName().equalsIgnoreCase(swimmerName)){
+                                swimmer.addResult(result);
+                            }
+                        }
+                        competition.addResult(result);
+                    }
                 }
             }
+
             scanner.close();
         } catch (FileNotFoundException e) {
             e.printStackTrace();

@@ -24,6 +24,9 @@ public class SwimmerOperation {
     }
 
     public void swimmerOptions() {
+        fileHandling.readSwimmersFromTxtFile();
+        fileHandling.readCompetitionsFromTxtFile();
+        fileHandling.readResultsFromTxtFile();
         System.out.println("What do you wish to do?" +
                 "\n 1. Add new member" +
                 "\n 2. Delete member" +
@@ -90,21 +93,39 @@ public class SwimmerOperation {
 
     public void deleteSwimmer() {
         boolean swimmerFound = false;
+        boolean isSwimmerDeleted = false;
+        Competition competitionToDelete = null;
+        Result resultToDelete = null;
         System.out.println("Whats the name off the swimmer ('9' to exit)");
         String name = scanner.nextLine();
         if (name.equals("9")) swimmerOptions();
-        for (Swimmer swimmer : fileHandling.swimmers) {
-            if (name.equalsIgnoreCase(swimmer.getName())) {
-                swimmerFound = true;
-                System.out.println("Are you sure you want to delete " + swimmer.getName() + "? Y/N");
-                String yesNo = scanner.nextLine();
-                if (yesNo.equalsIgnoreCase("y")) {
-                    fileHandling.swimmers.remove(swimmer);
-                    fileHandling.saveSwimmersToTxtFile();
-                    System.out.println("Deletion successful");
-                } else System.out.println("Deletion cancelled");
+            for (Swimmer swimmer : fileHandling.swimmers) {
+                if (name.equalsIgnoreCase(swimmer.getName())) {
+                    swimmerFound = true;
+                    System.out.println("Are you sure you want to delete " + swimmer.getName() + "? Y/N");
+                    String yesNo = scanner.nextLine();
+                    if (yesNo.equalsIgnoreCase("y")) {
+                        fileHandling.swimmers.remove(swimmer);
+                        for (Result result : results){
+                            if (result.getSwimmerName().equalsIgnoreCase(name)){
+                                for (Competition competition : competitions){
+                                    if (competition.equals(result.getCompetition())){
+                                        competitionToDelete = competition;
+                                    }
+                                }
+                                resultToDelete = result;
+                            }
+                        }
+                        if (resultToDelete != null)fileHandling.results.remove(resultToDelete);
+                        if (competitionToDelete != null)fileHandling.competitions.remove(competitionToDelete);
+                        fileHandling.saveResultsToTxtFile();
+                        fileHandling.saveCompetitionsToTxtFile();
+                        fileHandling.saveSwimmersToTxtFile();
+                        System.out.println("Deletion successful");
+                        swimmerOptions();
+                    } else System.out.println("Deletion cancelled");
+                }
             }
-        }
         if (!swimmerFound) System.out.println("Swimmer not found");
         swimmerOptions();
     }
@@ -154,16 +175,20 @@ public class SwimmerOperation {
         scanner.nextLine(); //scanner bug
         switch (chosenNumber) {
             case 1 -> {
+                boolean swimmerFound = false;
                 System.out.println("Whats the name you want to search?");
                 String name = scanner.nextLine();
                 for (Swimmer swimmer : fileHandling.swimmers) {
                     if (name.equalsIgnoreCase(swimmer.getName())) {
-                        System.out.println(swimmer);
-                    } else {
-                        System.out.println("Name not found in system, try again");
-                        search();
+                        System.out.println("Name: " + swimmer.getName());
+                        System.out.println("Age: " + swimmer.getAge());
+                        System.out.println("Active Member: " + swimmer.getMembershipActive());
+                        System.out.println("Competitive Swimmer: " + swimmer.isCompetitiveSwimmer());
+                        System.out.println("Main Discipline: " + swimmer.getDiscipline());
+
+                        swimmerFound = true;
                     }
-                }
+                }if (!swimmerFound) System.out.println("swimmer not found");
                 swimmerOptions();
             }
             case 2 -> {

@@ -23,6 +23,9 @@ public class CompertitionOperation{
         this.competitions = fileHandling.competitions;
     }
     public void competitionOptions() {
+        fileHandling.readSwimmersFromTxtFile();
+        fileHandling.readCompetitionsFromTxtFile();
+        fileHandling.readResultsFromTxtFile();
             System.out.println("Competition Options:" +
                     "\n 1. Create Competition" +
                     "\n 2. View all competitions" +
@@ -117,6 +120,7 @@ public class CompertitionOperation{
                 Result newResult = new Result(swimmerName, placement, time, discipline, selectedCompetition);
                 selectedCompetition.addResult(newResult);
                 selectedSwimmer.addResult(newResult);
+                fileHandling.results.add(newResult);
                 fileHandling.saveResultsToTxtFile();
                 System.out.println("Result added successfully.");
             }
@@ -152,6 +156,7 @@ public class CompertitionOperation{
         if (!competitionFound) {
             System.out.println("Competition not found.");
         }
+        competitionOptions();
     }
     public void viewBestTimes() {
         System.out.println("Select the discipline for which you want to view the best times:" +
@@ -179,14 +184,6 @@ public class CompertitionOperation{
         for (Competition competition : fileHandling.competitions) {
             for (Result result : competition.getResults()) {
                 if (result.getDiscipline().equalsIgnoreCase(selectedDiscipline)) {
-                    filteredResults.add(result);
-                }
-            }
-        }
-        for (Swimmer swimmer : fileHandling.swimmers) {
-            for (Result result : swimmer.getCompetitionHistory()) {
-                if (result.getCompetition().getNameCompetition().equalsIgnoreCase("Training") &&
-                        result.getDiscipline().equalsIgnoreCase(selectedDiscipline)) {
                     filteredResults.add(result);
                 }
             }
