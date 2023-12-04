@@ -19,7 +19,7 @@ public class Swimmer {
         this.isCompetitiveSwimmer = isCompetitiveSwimmer;
         this.discipline = discipline;
         this.localDate = localDate;
-        this.competitionHistory = competitionHistory;
+        this.competitionHistory = new ArrayList<>();
     }
 
     public void addResult(Result result) {
