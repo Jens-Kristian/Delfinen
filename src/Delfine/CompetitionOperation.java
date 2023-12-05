@@ -29,10 +29,10 @@ public class CompetitionOperation {
             System.out.println("Competition Options:" +
                     "\n 1. Create Competition" +
                     "\n 2. Delete Competition" +
-                    "\n 2. View all competitions" +
-                    "\n 3. Add Results to Competition" +
-                    "\n 4. View Competition Details" +
-                    "\n 5. View top 5 times for spesific disciplie" +
+                    "\n 3. View all competitions" +
+                    "\n 4. Add Results to Competition" +
+                    "\n 5. View Competition Details" +
+                    "\n 6. View top 5 times for spesific disciplie" +
                     "\n 9. Return to Main Menu");
             int choice = scanner.nextInt();
             scanner.nextLine(); // Scanner bug
@@ -72,25 +72,24 @@ public class CompetitionOperation {
     }
     public void deleteCompetition(){
         boolean competitionFound = false;
+        ArrayList<Result> resultToDelete = new ArrayList<>();
+        Competition competitionToDelete = null;
         System.out.println("Whats the name off the Competition you want to delete? (9 for exit)");
         String competitionName = scanner.nextLine();
         if (competitionName.equalsIgnoreCase("9"))competitionOptions();
         for (Competition competition : fileHandling.competitions){
             if (competition.getNameCompetition().equalsIgnoreCase(competitionName)){
                 competitionFound = true;
-                System.out.println("Competition is found : "+competition.getNameCompetition()+competition.getDate());
+                System.out.println("Competition is found : "+competition.getNameCompetition()+" "+competition.getDate());
                 System.out.println("Are you sure you want to delete this competition? (Y/N)");
                 String yesNo = scanner.nextLine();
                 if (yesNo.equalsIgnoreCase("y")){
                     for (Result result : fileHandling.results){
                         if (result.getCompetiotionName().equalsIgnoreCase(competition.getNameCompetition())){
-                            fileHandling.results.remove(result);
+                            resultToDelete.add(result);
                         }
                     }
-                    fileHandling.competitions.remove(competition);
-                    fileHandling.saveResultsToTxtFile();
-                    fileHandling.saveCompetitionsToTxtFile();
-                    fileHandling.saveSwimmersToTxtFile();
+                    competitionToDelete = competition;
                 }
             }
         }
@@ -98,6 +97,15 @@ public class CompetitionOperation {
             System.out.println("Competition not found, try again");
             deleteCompetition();
         }
+        if (competitionToDelete != null){
+            competitions.remove(competitionToDelete);
+        }
+        for (Result result : resultToDelete){
+            results.remove(result);
+        }
+        fileHandling.saveResultsToTxtFile();
+        fileHandling.saveCompetitionsToTxtFile();
+        fileHandling.saveSwimmersToTxtFile();
         competitionOptions();
     }
     public void viewAllCompetitions(){
