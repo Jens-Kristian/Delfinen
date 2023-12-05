@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Scanner;
 
-public class CompertitionOperation{
+public class CompetitionOperation {
 
     Scanner scanner = new Scanner(System.in);
     public ArrayList<Swimmer> swimmers;
@@ -17,7 +17,7 @@ public class CompertitionOperation{
         this.menu = menu;
     }
     FileHandling fileHandling = new FileHandling();
-    public CompertitionOperation() {
+    public CompetitionOperation() {
         this.results = fileHandling.results;
         this.swimmers = fileHandling.swimmers;
         this.competitions = fileHandling.competitions;
@@ -28,6 +28,7 @@ public class CompertitionOperation{
         fileHandling.readResultsFromTxtFile();
             System.out.println("Competition Options:" +
                     "\n 1. Create Competition" +
+                    "\n 2. Delete Competition" +
                     "\n 2. View all competitions" +
                     "\n 3. Add Results to Competition" +
                     "\n 4. View Competition Details" +
@@ -38,10 +39,11 @@ public class CompertitionOperation{
 
             switch (choice) {
                 case 1 -> createCompetition();
-                case 2 -> viewAllCompetitions();
-                case 3 -> addResultsToCompetition();
-                case 4 -> viewCompetitionDetails();
-                case 5 -> viewBestTimes();
+                case 2 -> deleteCompetition();
+                case 3 -> viewAllCompetitions();
+                case 4 -> addResultsToCompetition();
+                case 5 -> viewCompetitionDetails();
+                case 6 -> viewBestTimes();
                 case 9 -> {
                     menu.run();
                 }
@@ -66,6 +68,36 @@ public class CompertitionOperation{
         fileHandling.competitions.add(newCompetition);
         fileHandling.saveCompetitionsToTxtFile();
         System.out.println("New competition "+name+" is created, date:"+localDate);
+        competitionOptions();
+    }
+    public void deleteCompetition(){
+        boolean competitionFound = false;
+        System.out.println("Whats the name off the Competition you want to delete? (9 for exit)");
+        String competitionName = scanner.nextLine();
+        if (competitionName.equalsIgnoreCase("9"))competitionOptions();
+        for (Competition competition : fileHandling.competitions){
+            if (competition.getNameCompetition().equalsIgnoreCase(competitionName)){
+                competitionFound = true;
+                System.out.println("Competition is found : "+competition.getNameCompetition()+competition.getDate());
+                System.out.println("Are you sure you want to delete this competition? (Y/N)");
+                String yesNo = scanner.nextLine();
+                if (yesNo.equalsIgnoreCase("y")){
+                    for (Result result : fileHandling.results){
+                        if (result.getCompetiotionName().equalsIgnoreCase(competition.getNameCompetition())){
+                            fileHandling.results.remove(result);
+                        }
+                    }
+                    fileHandling.competitions.remove(competition);
+                    fileHandling.saveResultsToTxtFile();
+                    fileHandling.saveCompetitionsToTxtFile();
+                    fileHandling.saveSwimmersToTxtFile();
+                }
+            }
+        }
+        if (!competitionFound) {
+            System.out.println("Competition not found, try again");
+            deleteCompetition();
+        }
         competitionOptions();
     }
     public void viewAllCompetitions(){

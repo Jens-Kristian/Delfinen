@@ -7,12 +7,14 @@ public class Main {
         boolean isAuthenticated = login.authenticateUser();
 
         if (isAuthenticated) {
-            CompertitionOperation compertitionOperation = new CompertitionOperation();
+            CompetitionOperation competitionOperation = new CompetitionOperation();
             SwimmerOperation swimmerOperation = new SwimmerOperation();
-            Menu menu = new Menu(compertitionOperation, swimmerOperation);
+            Econ econ = new Econ();
+            Menu menu = new Menu(competitionOperation, swimmerOperation, econ);
 
-            compertitionOperation.setMenu(menu);
+            competitionOperation.setMenu(menu);
             swimmerOperation.setMenu(menu);
+            econ.setMenu(menu);
 
             menu.run();
         } else {

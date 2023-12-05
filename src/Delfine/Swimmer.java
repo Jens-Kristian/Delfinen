@@ -9,16 +9,15 @@ public class Swimmer {
     public boolean isCompetitiveSwimmer;
     public ArrayList<Result> competitionHistory;
     public String discipline;
-    public LocalDate localDate;
+    public LocalDate registrationDate;
 
-
-    public Swimmer(String name, int age, Boolean membershipActive, boolean isCompetitiveSwimmer, String discipline, LocalDate localDate) {
+    public Swimmer(String name, int age, Boolean membershipActive, boolean isCompetitiveSwimmer, String discipline, LocalDate registrationDate) {
         this.name = name;
         this.age = age;
         this.membershipActive = membershipActive;
         this.isCompetitiveSwimmer = isCompetitiveSwimmer;
         this.discipline = discipline;
-        this.localDate = localDate;
+        this.registrationDate = registrationDate;
         this.competitionHistory = new ArrayList<>();
     }
 
@@ -57,7 +56,7 @@ public class Swimmer {
     public ArrayList<Result> getCompetitionHistory(){return competitionHistory;}
 
     public String toString(){
-        return name+","+age+","+membershipActive+","+isCompetitiveSwimmer+","+discipline+","+localDate;
+        return name+","+age+","+membershipActive+","+isCompetitiveSwimmer+","+discipline+","+ registrationDate;
     }
 
 }

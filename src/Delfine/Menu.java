@@ -5,12 +5,14 @@ import java.util.Scanner;
 public class Menu {
 
     public Scanner scanner = new Scanner(System.in);
-    public CompertitionOperation compertitionOperation;
+    public CompetitionOperation competitionOperation;
     public SwimmerOperation swimmerOperation;
+    public Econ econ;
 
-    public Menu(CompertitionOperation compertitionOperation, SwimmerOperation swimmerOperation) {
-        this.compertitionOperation = compertitionOperation;
+    public Menu(CompetitionOperation competitionOperation, SwimmerOperation swimmerOperation, Econ econ) {
+        this.competitionOperation = competitionOperation;
         this.swimmerOperation = swimmerOperation;
+        this.econ = econ;
     }
 
     public void printMenu(){
@@ -29,7 +31,8 @@ public class Menu {
 
             switch (choose) {
                 case 1 -> swimmerOperation.swimmerOptions();
-                case 2 -> compertitionOperation.competitionOptions();
+                case 2 -> competitionOperation.competitionOptions();
+                case 3 -> econ.econOptions();
                 case 9 -> System.exit(0);
             }
         }

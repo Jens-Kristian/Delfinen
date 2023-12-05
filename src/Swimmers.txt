@@ -1,2 +1,4 @@
-jens,2,true,true,Crawl,2023-12-02
-test,222,true,false,Crawl,2023-12-02
+Hans Ole,69,true,false,Crawl,2023-12-05
+Test,18,true,false,Crawl,2023-12-05
+Jens,22,true,true,Crawl,2023-12-05
+John John,6,true,false,Crawl,2023-12-05

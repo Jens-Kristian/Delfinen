@@ -30,17 +30,17 @@ public class SwimmerOperation {
         System.out.println("What do you wish to do?" +
                 "\n 1. Add new member" +
                 "\n 2. Delete member" +
-                "\n 3. View list off all swimmers" +
+                "\n 3. See swimmer details" +
                 "\n 4. Search options" +
                 "\n 5. Change specifics of certain member" +
-                "\n 6. Add best traning time" +
+                "\n 6. Add best training time" +
                 "\n 9. Main Menu");
         int choose = scanner.nextInt();
         scanner.nextLine();
         switch (choose) {
             case 1 -> createSwimmer();
             case 2 -> deleteSwimmer();
-            case 3 -> fullMemberList();
+            case 3 -> seeSwimmerDitails();
             case 4 -> search();
             case 5 -> changeSwimmerAtribute();
             case 6 -> newBestTrainingTime();
@@ -129,27 +129,6 @@ public class SwimmerOperation {
         if (!swimmerFound) System.out.println("Swimmer not found");
         swimmerOptions();
     }
-
-    public void fullMemberList() {
-        System.out.println("_______________");
-        for (Swimmer swimmer : fileHandling.swimmers) {
-            System.out.println("Name: " + swimmer.getName());
-            System.out.println("Age: " + swimmer.getAge());
-            System.out.println("Active Member: " + swimmer.getMembershipActive());
-            System.out.println("Competitive Swimmer: " + swimmer.isCompetitiveSwimmer());
-            System.out.println("Main Discipline: " + swimmer.getDiscipline());
-
-            Result bestTrainingResult = findBestTrainingTime(swimmer);
-            if (bestTrainingResult != null) {
-                System.out.println("Best Training Time: " + bestTrainingResult.getTime() + " minutes in " + bestTrainingResult.getDiscipline());
-            } else {
-                System.out.println("No training time recorded");
-            }
-            System.out.println("_______________");
-        }
-        swimmerOptions();
-    }
-
     public Result findBestTrainingTime(Swimmer swimmer) {
         Result bestTrainingResult = null;
         for (Result result : swimmer.getCompetitionHistory()) {
@@ -180,12 +159,7 @@ public class SwimmerOperation {
                 String name = scanner.nextLine();
                 for (Swimmer swimmer : fileHandling.swimmers) {
                     if (name.equalsIgnoreCase(swimmer.getName())) {
-                        System.out.println("Name: " + swimmer.getName());
-                        System.out.println("Age: " + swimmer.getAge());
-                        System.out.println("Active Member: " + swimmer.getMembershipActive());
-                        System.out.println("Competitive Swimmer: " + swimmer.isCompetitiveSwimmer());
-                        System.out.println("Main Discipline: " + swimmer.getDiscipline());
-
+                        printSwimmerDitails(swimmer);
                         swimmerFound = true;
                     }
                 }if (!swimmerFound) System.out.println("swimmer not found");
@@ -380,5 +354,50 @@ public class SwimmerOperation {
         fileHandling.saveCompetitionsToTxtFile();
         System.out.println("New best training time recorded for " + selectedSwimmer.getName());
         swimmerOptions();
+    }
+    public void seeSwimmerDitails(){
+        boolean swimmerFound = false;
+        System.out.println("Whats the name off the swimmer you want to look op? (9 for exit)");
+        String name = scanner.nextLine();
+        if (name.equalsIgnoreCase("9"))swimmerOptions();
+        for (Swimmer swimmer : swimmers){
+            if (name.equalsIgnoreCase(swimmer.getName())){
+                printSwimmerDitails(swimmer);
+                swimmerFound = true;
+            }
+        }
+        if (!swimmerFound){
+            System.out.println("Swimmer not found, try again");
+            seeSwimmerDitails();
+        }swimmerOptions();
+    }
+    public void printSwimmerDitails(Swimmer swimmer) {
+        boolean hasCompetedInCompetition = false;
+        System.out.println("Name: " + swimmer.getName());
+        System.out.println("Age: " + swimmer.getAge());
+        System.out.println("Active Member: " + swimmer.getMembershipActive());
+        System.out.println("Competitive Swimmer: " + swimmer.isCompetitiveSwimmer());
+        System.out.println("Main Discipline: " + swimmer.getDiscipline());
+        System.out.println("");
+
+        Result bestTrainingTime = findBestTrainingTime(swimmer);
+        if (bestTrainingTime != null) {
+            System.out.println("Best Training Time: " + bestTrainingTime.getTime() + " minutes in " + bestTrainingTime.getDiscipline());
+        } else System.out.println("No training times recorded for " + swimmer.getName());
+
+        System.out.println("");
+
+        for (Result result : results) {
+            if (result.getSwimmerName().equalsIgnoreCase(swimmer.getName()) && !result.getCompetiotionName().equalsIgnoreCase("training")) {
+                hasCompetedInCompetition = true;
+                System.out.println(swimmer.getName() + " has competed in " + result.getCompetiotionName());
+                System.out.println("Discipline : "+result.getDiscipline());
+                System.out.println("Placement : "+result.getPlacement());
+                System.out.println("Time : "+result.getTime());
+                System.out.println("");
+            }
+        }
+
+        if (!hasCompetedInCompetition) System.out.println("Swimmer has never competed in competitions before");
     }
 }

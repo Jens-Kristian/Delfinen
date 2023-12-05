@@ -1,3 +1,0 @@
-jens,0,22.0,Crawl,Training,2023-12-30
-jens,2,30.0,Crawl,champ,2012-02-02
-test,1,9.0,Crawl,champ,2012-02-02
