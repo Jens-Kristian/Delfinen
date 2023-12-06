@@ -65,7 +65,7 @@ public class CompetitionOperation {
         int year = scanner.nextInt();
         LocalDate localDate = LocalDate.of(year, month, day);
         Competition newCompetition = new Competition(name, localDate);
-        fileHandling.competitions.add(newCompetition);
+        competitions.add(newCompetition);
         fileHandling.saveCompetitionsToTxtFile();
         System.out.println("New competition "+name+" is created, date:"+localDate);
         competitionOptions();
@@ -77,14 +77,14 @@ public class CompetitionOperation {
         System.out.println("Whats the name off the Competition you want to delete? (9 for exit)");
         String competitionName = scanner.nextLine();
         if (competitionName.equalsIgnoreCase("9"))competitionOptions();
-        for (Competition competition : fileHandling.competitions){
+        for (Competition competition : competitions){
             if (competition.getNameCompetition().equalsIgnoreCase(competitionName)){
                 competitionFound = true;
                 System.out.println("Competition is found : "+competition.getNameCompetition()+" "+competition.getDate());
                 System.out.println("Are you sure you want to delete this competition? (Y/N)");
                 String yesNo = scanner.nextLine();
                 if (yesNo.equalsIgnoreCase("y")){
-                    for (Result result : fileHandling.results){
+                    for (Result result : results){
                         if (result.getCompetiotionName().equalsIgnoreCase(competition.getNameCompetition())){
                             resultToDelete.add(result);
                         }
@@ -109,7 +109,7 @@ public class CompetitionOperation {
         competitionOptions();
     }
     public void viewAllCompetitions(){
-        for (Competition competition : fileHandling.competitions){
+        for (Competition competition : competitions){
             if (!competition.getNameCompetition().equalsIgnoreCase("Training")){
                 System.out.println(competition);
             }
@@ -122,7 +122,7 @@ public class CompetitionOperation {
 
         boolean competitionFound = false;
         Competition selectedCompetition = null;
-        for (Competition competition : fileHandling.competitions) {
+        for (Competition competition : competitions) {
             if (competition.getNameCompetition().equalsIgnoreCase(competitionName)) {
                 selectedCompetition = competition;
                 competitionFound = true;
@@ -137,7 +137,7 @@ public class CompetitionOperation {
 
             boolean swimmerFound = false;
             Swimmer selectedSwimmer = null;
-            for (Swimmer swimmer : fileHandling.swimmers) {
+            for (Swimmer swimmer : swimmers) {
                 if (swimmer.getName().equalsIgnoreCase(swimmerName)) {
                     selectedSwimmer = swimmer;
                     swimmerFound = true;
@@ -160,7 +160,7 @@ public class CompetitionOperation {
                 Result newResult = new Result(swimmerName, placement, time, discipline, selectedCompetition);
                 selectedCompetition.addResult(newResult);
                 selectedSwimmer.addResult(newResult);
-                fileHandling.results.add(newResult);
+                results.add(newResult);
                 fileHandling.saveResultsToTxtFile();
                 System.out.println("Result added successfully.");
             }
@@ -173,7 +173,7 @@ public class CompetitionOperation {
         String competitionName = scanner.nextLine();
 
         boolean competitionFound = false;
-        for (Competition competition : fileHandling.competitions) {
+        for (Competition competition : competitions) {
             if (competition.getNameCompetition().equalsIgnoreCase(competitionName)) {
                 competitionFound = true;
                 System.out.println("_______________");
@@ -225,7 +225,7 @@ public class CompetitionOperation {
         }
         // lav et nyt array filteredResults.,. Alle resultater bliver lagt her ind
         ArrayList<Result> filteredResults = new ArrayList<>();
-        for (Competition competition : fileHandling.competitions) {
+        for (Competition competition : competitions) {
             for (Result result : competition.getResults()) {
                 if (result.getDiscipline().equalsIgnoreCase(selectedDiscipline)) {
                     filteredResults.add(result);

@@ -56,7 +56,7 @@ public class SwimmerOperation {
         System.out.println("Whats the name of the swimmer? (Full name)");
         name = scanner.nextLine();
 
-        for (Swimmer swimmer : fileHandling.swimmers) {
+        for (Swimmer swimmer : swimmers) {
             if (name.equalsIgnoreCase(swimmer.getName())) {
                 System.out.println("Name already taken. Please start over.");
                 menu.run();
@@ -87,7 +87,7 @@ public class SwimmerOperation {
         LocalDate membershipActiveDate = LocalDate.of(0001,1,1);
         //Går ud fra alle nye svømmere ikke starter med at active
         Swimmer newSwimmer = new Swimmer(name, age, true, isCompetitiveSwimmer, discipline, registrationDate, membershipActiveDate);
-        fileHandling.swimmers.add(newSwimmer);
+        swimmers.add(newSwimmer);
         fileHandling.saveSwimmersToTxtFile();
         System.out.println("Swimmer added successfully.");
         swimmerOptions();
@@ -101,13 +101,13 @@ public class SwimmerOperation {
         System.out.println("Whats the name off the swimmer ('9' to exit)");
         String name = scanner.nextLine();
         if (name.equals("9")) swimmerOptions();
-            for (Swimmer swimmer : fileHandling.swimmers) {
+            for (Swimmer swimmer : swimmers) {
                 if (name.equalsIgnoreCase(swimmer.getName())) {
                     swimmerFound = true;
                     System.out.println("Are you sure you want to delete " + swimmer.getName() + "? Y/N");
                     String yesNo = scanner.nextLine();
                     if (yesNo.equalsIgnoreCase("y")) {
-                        fileHandling.swimmers.remove(swimmer);
+                        swimmers.remove(swimmer);
                         for (Result result : results){
                             if (result.getSwimmerName().equalsIgnoreCase(name)){
                                 for (Competition competition : competitions){
@@ -118,8 +118,8 @@ public class SwimmerOperation {
                                 resultToDelete = result;
                             }
                         }
-                        if (resultToDelete != null)fileHandling.results.remove(resultToDelete);
-                        if (competitionToDelete != null)fileHandling.competitions.remove(competitionToDelete);
+                        if (resultToDelete != null)results.remove(resultToDelete);
+                        if (competitionToDelete != null)competitions.remove(competitionToDelete);
                         fileHandling.saveResultsToTxtFile();
                         fileHandling.saveCompetitionsToTxtFile();
                         fileHandling.saveSwimmersToTxtFile();
@@ -160,12 +160,13 @@ public class SwimmerOperation {
                 for (Swimmer swimmer : swimmers){
                     System.out.println(swimmer.getName()+" "+swimmer.getAge());
                 }
+                swimmerOptions();
             }
             case 2 -> {
                 System.out.println("Whats the age you want to search?");
                 boolean swimmerFound = false;
                 int age = scanner.nextInt();
-                for (Swimmer swimmer : fileHandling.swimmers) {
+                for (Swimmer swimmer : swimmers) {
                     if (age == swimmer.getAge()) {
                         System.out.println("Name: "+swimmer.getName()+" Age: "+swimmer.getAge());
                         swimmerFound = true;
@@ -175,7 +176,7 @@ public class SwimmerOperation {
                 swimmerOptions();
             }
             case 3 -> {
-                for (Swimmer swimmer : fileHandling.swimmers) {
+                for (Swimmer swimmer : swimmers) {
                     if (swimmer.isCompetitiveSwimmer()) {
                         System.out.println("Name: "+swimmer.getName()+" Age: "+swimmer.getAge());
                     } else {
@@ -186,7 +187,7 @@ public class SwimmerOperation {
                 swimmerOptions();
             }
             case 4 -> {
-                for (Swimmer swimmer : fileHandling.swimmers) {
+                for (Swimmer swimmer : swimmers) {
                     if (swimmer.getMembershipActive()) {
                         System.out.println("Name: "+swimmer.getName()+" Age: "+swimmer.getAge());
                     } else {
@@ -197,7 +198,7 @@ public class SwimmerOperation {
                 swimmerOptions();
             }
             case 5 -> {
-                for (Swimmer swimmer : fileHandling.swimmers) {
+                for (Swimmer swimmer : swimmers) {
                     if (!swimmer.getMembershipActive()) {
                         System.out.println("Name: "+swimmer.getName()+" Age: "+swimmer.getAge());
                     } else {
@@ -223,7 +224,7 @@ public class SwimmerOperation {
         System.out.println("Whats the name of the member you what to change? (9 for exit)");
         String name = scanner.nextLine();
         if (name.equals("9")) swimmerOptions();
-        for (Swimmer swimmer : fileHandling.swimmers) {
+        for (Swimmer swimmer : swimmers) {
             if (name.equalsIgnoreCase(swimmer.getName())) {
                 swimmerFound = true;
                 System.out.println(swimmer);
@@ -337,7 +338,7 @@ public class SwimmerOperation {
         if (name.equals("9")) swimmerOptions();
 
         Swimmer selectedSwimmer = null;
-        for (Swimmer swimmer : fileHandling.swimmers) {
+        for (Swimmer swimmer : swimmers) {
             if (name.equalsIgnoreCase(swimmer.getName())) {
                 selectedSwimmer = swimmer;
             }
@@ -380,10 +381,10 @@ public class SwimmerOperation {
 
         LocalDate localDate = LocalDate.of(year, month, day);
         Competition newCompetition = new Competition("Training", localDate);
-        fileHandling.competitions.add(newCompetition);
+        competitions.add(newCompetition);
         Result newResult = new Result(selectedSwimmer.getName(), 0, time, discipline, newCompetition);
         selectedSwimmer.addResult(newResult);
-        fileHandling.results.add(newResult);
+        results.add(newResult);
         fileHandling.saveResultsToTxtFile();
         fileHandling.saveCompetitionsToTxtFile();
         System.out.println("New best training time recorded for " + selectedSwimmer.getName());
