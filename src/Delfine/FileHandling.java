@@ -68,14 +68,15 @@ public class FileHandling {
                 Boolean membershipActive = Boolean.parseBoolean(attributes[2]);
                 boolean isCompetitiveSwimmer = Boolean.parseBoolean(attributes[3]);
                 String discipline = attributes[4];
-                LocalDate localDate = LocalDate.parse(attributes[5]);
+                LocalDate registrationDate = LocalDate.parse(attributes[5]);
+                LocalDate inactiveStartDate = LocalDate.parse(attributes[6]);
                 for (Swimmer testDuplicateSwimmer : swimmers){
                     if (testDuplicateSwimmer.getName().equalsIgnoreCase(name)){
                         swimmerIsDuplicate = true;
                     }
                 }
                 if (!swimmerIsDuplicate){
-                    Swimmer swimmer = new Swimmer(name, age, membershipActive, isCompetitiveSwimmer, discipline, localDate);
+                    Swimmer swimmer = new Swimmer(name, age, membershipActive, isCompetitiveSwimmer, discipline, registrationDate, inactiveStartDate);
                     swimmers.add(swimmer);
                 }
             }

@@ -82,9 +82,11 @@ public class SwimmerOperation {
             case 4 -> discipline = "Backcrawl";
             case 5 -> discipline = "Megley";
         }
-        LocalDate localDate = LocalDate.now();
-        //Går ud fra alle nye svømmere ikke starter med at være passive
-        Swimmer newSwimmer = new Swimmer(name, age, true, isCompetitiveSwimmer, discipline, localDate);
+        LocalDate registrationDate = LocalDate.now();
+        //Det er i stedet for "null" som ikke kunne blive parsed i FileHandling.java:72
+        LocalDate membershipActiveDate = LocalDate.of(0001,1,1);
+        //Går ud fra alle nye svømmere ikke starter med at active
+        Swimmer newSwimmer = new Swimmer(name, age, true, isCompetitiveSwimmer, discipline, registrationDate, membershipActiveDate);
         fileHandling.swimmers.add(newSwimmer);
         fileHandling.saveSwimmersToTxtFile();
         System.out.println("Swimmer added successfully.");
@@ -144,26 +146,20 @@ public class SwimmerOperation {
     public void search() {
         int chosenNumber;
         System.out.println("What do you want to search by?" +
-                "\n 1. Name" +
+                "\n 1. View full member list" +
                 "\n 2. Age" +
                 "\n 3. See all Competitive swimmers" +
                 "\n 4. See all Active members" +
                 "\n 5. See all Passive members" +
+                "\n 6. See list of all swimmers" +
                 "\n 9. Exit");
         chosenNumber = scanner.nextInt();
         scanner.nextLine(); //scanner bug
         switch (chosenNumber) {
             case 1 -> {
-                boolean swimmerFound = false;
-                System.out.println("Whats the name you want to search?");
-                String name = scanner.nextLine();
-                for (Swimmer swimmer : fileHandling.swimmers) {
-                    if (name.equalsIgnoreCase(swimmer.getName())) {
-                        printSwimmerDitails(swimmer);
-                        swimmerFound = true;
-                    }
-                }if (!swimmerFound) System.out.println("swimmer not found");
-                swimmerOptions();
+                for (Swimmer swimmer : swimmers){
+                    System.out.println(swimmer.getName()+" "+swimmer.getAge());
+                }
             }
             case 2 -> {
                 System.out.println("Whats the age you want to search?");
@@ -171,7 +167,7 @@ public class SwimmerOperation {
                 int age = scanner.nextInt();
                 for (Swimmer swimmer : fileHandling.swimmers) {
                     if (age == swimmer.getAge()) {
-                        System.out.println(swimmer);
+                        System.out.println("Name: "+swimmer.getName()+" Age: "+swimmer.getAge());
                         swimmerFound = true;
                     }
                 }
@@ -181,7 +177,7 @@ public class SwimmerOperation {
             case 3 -> {
                 for (Swimmer swimmer : fileHandling.swimmers) {
                     if (swimmer.isCompetitiveSwimmer()) {
-                        System.out.println(swimmer);
+                        System.out.println("Name: "+swimmer.getName()+" Age: "+swimmer.getAge());
                     } else {
                         System.out.println("No competitive swimmers found, try again");
                         search();
@@ -192,7 +188,7 @@ public class SwimmerOperation {
             case 4 -> {
                 for (Swimmer swimmer : fileHandling.swimmers) {
                     if (swimmer.getMembershipActive()) {
-                        System.out.println(swimmer);
+                        System.out.println("Name: "+swimmer.getName()+" Age: "+swimmer.getAge());
                     } else {
                         System.out.println("No active member found, try again");
                         search();
@@ -203,13 +199,18 @@ public class SwimmerOperation {
             case 5 -> {
                 for (Swimmer swimmer : fileHandling.swimmers) {
                     if (!swimmer.getMembershipActive()) {
-                        System.out.println(swimmer);
+                        System.out.println("Name: "+swimmer.getName()+" Age: "+swimmer.getAge());
                     } else {
                         System.out.println("No inactive member found, try again");
                         search();
                     }
                 }
                 swimmerOptions();
+            }
+            case 6 -> {
+                for (Swimmer swimmer : swimmers){
+                    System.out.println("Name: "+swimmer.getName()+" Age: "+swimmer.getAge());
+                }
             }
         }
     }
@@ -228,9 +229,11 @@ public class SwimmerOperation {
                 System.out.println(swimmer);
                 System.out.println("What attribute do you what to change?" +
                         "\n 1. age" +
-                        "\n 2. membership Active/passiv" +
+                        "\n 2. membership Active/passive" +
                         "\n 3. Competitive Swimmer / Motion Swimmer" +
-                        "\n 4. Main discipline");
+                        "\n 4. Main discipline" +
+                        "\n 5. Registration date" +
+                        "\n 6. The date membership last got changed from Active/passive");
                 int choose = scanner.nextInt();
                 switch (choose) {
                     case 1 -> {
@@ -244,23 +247,25 @@ public class SwimmerOperation {
                     case 2 -> {
                         boolean activePasiv = swimmer.getMembershipActive();
                         if (activePasiv) {
-                            activePasiv = false;
-                            pasivActive = "pasiv";
+                            swimmer.setMembershipActiveDate(LocalDate.now());
+                            swimmer.setMembershipActive(false);
+                            pasivActive = "a passive member";
                         } else {
-                            activePasiv = true;
-                            pasivActive = "active";
+                            swimmer.setMembershipActiveDate(LocalDate.now());
+                            swimmer.setMembershipActive(true);
+                            pasivActive = "an active member";
                         }
                         fileHandling.saveSwimmersToTxtFile();
-                        System.out.println(swimmer.getName() + " is now " + pasivActive);
+                        System.out.println(swimmer.getName() + " is from todays date " + pasivActive);
                         swimmerOptions();
                     }
                     case 3 -> {
                         boolean competitive = swimmer.isCompetitiveSwimmer();
                         if (competitive) {
-                            competitive = false;
+                            swimmer.setCompetitiveSwimmer(false);
                             competitiveMotion = "Motion";
                         } else {
-                            competitive = true;
+                            swimmer.setCompetitiveSwimmer(true);
                             competitiveMotion = "competitive";
                         }
                         fileHandling.saveSwimmersToTxtFile();
@@ -287,7 +292,36 @@ public class SwimmerOperation {
                         System.out.println(swimmer.getName() + " new main discipline is " + discipline);
                         swimmerOptions();
                     }
-
+                    case 5 -> {
+                        System.out.println("Current registration date: "+swimmer.getRegistrationDate());
+                        System.out.println("What day?");
+                        int day = scanner.nextInt();
+                        System.out.println("What month?");
+                        int month = scanner.nextInt();
+                        System.out.println("What year?");
+                        int year = scanner.nextInt();
+                        LocalDate newRegistrationDate = LocalDate.of(year, month, day);
+                        swimmer.setRegistrationDate(newRegistrationDate);
+                        fileHandling.saveSwimmersToTxtFile();
+                        System.out.println("New registration date: "+swimmer.getRegistrationDate());
+                        swimmerOptions();
+                    }
+                    case 6-> {
+                        LocalDate replacementForNull = LocalDate.of(0001,1,1);
+                        if (!replacementForNull.equals(swimmer.getMembershipActiveDate())){
+                            System.out.println("What day?");
+                            int day = scanner.nextInt();
+                            System.out.println("What month?");
+                            int month = scanner.nextInt();
+                            System.out.println("What year?");
+                            int year = scanner.nextInt();
+                            LocalDate membershibActiveDate = LocalDate.of(year, month, day);
+                            swimmer.setRegistrationDate(membershibActiveDate);
+                            fileHandling.saveSwimmersToTxtFile();
+                            System.out.println("The date membership last got changed from Active/passive is now: "+swimmer.getRegistrationDate());
+                            swimmerOptions();
+                        }else System.out.println("Error: Member needs to have his membershib status set from active to passive before this action can be done");
+                    }
                 }
             }
         }
@@ -336,7 +370,7 @@ public class SwimmerOperation {
         scanner.nextLine(); // Scanner bug
 
         System.out.println("Enter the date for the best time:");
-        System.out.println("Day of the month:");
+        System.out.println("Day of the day:");
         int day = scanner.nextInt();
         System.out.println("Month (1-12):");
         int month = scanner.nextInt();
@@ -378,14 +412,18 @@ public class SwimmerOperation {
         System.out.println("Active Member: " + swimmer.getMembershipActive());
         System.out.println("Competitive Swimmer: " + swimmer.isCompetitiveSwimmer());
         System.out.println("Main Discipline: " + swimmer.getDiscipline());
-        System.out.println("");
+        System.out.println("Registration date: " + swimmer.getRegistrationDate());
+        LocalDate replacementForNull = LocalDate.of(0001,1,1);
+        if (!replacementForNull.equals(swimmer.getMembershipActiveDate())){
+            if (swimmer.membershipActive){
+                System.out.println("Date membership was changed to active: "+swimmer.getMembershipActiveDate());
+            }else System.out.println("Date membership was changed to passive: "+swimmer.getMembershipActiveDate());
+        }
 
         Result bestTrainingTime = findBestTrainingTime(swimmer);
         if (bestTrainingTime != null) {
             System.out.println("Best Training Time: " + bestTrainingTime.getTime() + " minutes in " + bestTrainingTime.getDiscipline());
         } else System.out.println("No training times recorded for " + swimmer.getName());
-
-        System.out.println("");
 
         for (Result result : results) {
             if (result.getSwimmerName().equalsIgnoreCase(swimmer.getName()) && !result.getCompetiotionName().equalsIgnoreCase("training")) {
@@ -394,9 +432,9 @@ public class SwimmerOperation {
                 System.out.println("Discipline : "+result.getDiscipline());
                 System.out.println("Placement : "+result.getPlacement());
                 System.out.println("Time : "+result.getTime());
-                System.out.println("");
             }
         }
+
 
         if (!hasCompetedInCompetition) System.out.println("Swimmer has never competed in competitions before");
     }

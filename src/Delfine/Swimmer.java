@@ -10,8 +10,9 @@ public class Swimmer {
     public ArrayList<Result> competitionHistory;
     public String discipline;
     public LocalDate registrationDate;
+    public LocalDate membershipActiveDate;
 
-    public Swimmer(String name, int age, Boolean membershipActive, boolean isCompetitiveSwimmer, String discipline, LocalDate registrationDate) {
+    public Swimmer(String name, int age, Boolean membershipActive, boolean isCompetitiveSwimmer, String discipline, LocalDate registrationDate,LocalDate membershipActiveDate) {
         this.name = name;
         this.age = age;
         this.membershipActive = membershipActive;
@@ -19,6 +20,7 @@ public class Swimmer {
         this.discipline = discipline;
         this.registrationDate = registrationDate;
         this.competitionHistory = new ArrayList<>();
+        this.membershipActiveDate = membershipActiveDate;
     }
 
     public void addResult(Result result) {
@@ -53,10 +55,22 @@ public class Swimmer {
         return isCompetitiveSwimmer;
     }
 
+    public void setCompetitiveSwimmer(boolean competitiveSwimmer) {isCompetitiveSwimmer = competitiveSwimmer;}
+
     public ArrayList<Result> getCompetitionHistory(){return competitionHistory;}
 
+    public LocalDate getRegistrationDate(){return registrationDate;}
+
+    public void setRegistrationDate(LocalDate registrationDate) {this.registrationDate = registrationDate;}
+
+    public void setMembershipActiveDate(LocalDate membershipActiveDate) {this.membershipActiveDate = membershipActiveDate;}
+
+    public LocalDate getMembershipActiveDate() {return membershipActiveDate;}
+
+    public void setMembershipActive(Boolean membershipActive) {this.membershipActive = membershipActive;}
+
     public String toString(){
-        return name+","+age+","+membershipActive+","+isCompetitiveSwimmer+","+discipline+","+ registrationDate;
+        return name+","+age+","+membershipActive+","+isCompetitiveSwimmer+","+discipline+","+ registrationDate+","+membershipActiveDate;
     }
 
 }
