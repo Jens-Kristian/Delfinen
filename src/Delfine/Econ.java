@@ -6,21 +6,15 @@ import java.util.Scanner;
 public class Econ {
     Scanner scanner = new Scanner(System.in);
     public ArrayList<Swimmer> swimmers;
-    public ArrayList<Competition> competitions;
-    public ArrayList<Result> results;
     private Menu menu;
 
     FileHandling fileHandling = new FileHandling();
     public Econ() {
         menu = new Menu();
-        this.results = fileHandling.results;
         this.swimmers = fileHandling.swimmers;
-        this.competitions = fileHandling.competitions;
     }
     public void econOptions() {
         fileHandling.readSwimmersFromTxtFile();
-        fileHandling.readCompetitionsFromTxtFile();
-        fileHandling.readResultsFromTxtFile();
         System.out.println("What do you wish to do?" +
                 "\n 1. View yearly earnings for memberships" +
                 "\n 2. View inactive members" +

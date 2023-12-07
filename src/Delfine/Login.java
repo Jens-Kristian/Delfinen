@@ -5,8 +5,8 @@ public class Login {
     public void authenticateUser() {
         Menu menu = new Menu();
         int maxAttempts = 3;
-        String correctCode = "justdrown";
-        String correctSecurityCode = "theydrowned";
+        String correctCode = "password";
+        String correctSecurityCode = "123";
 
         Scanner scanner = new Scanner(System.in);
 
