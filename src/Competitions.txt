@@ -1,0 +1,7 @@
+Training,2017-07-20
+Training,2022-11-05
+JuleChamp19,2019-12-24
+JuleChamp20,2020-12-24
+JuleChamp21,2021-12-24
+JuleChamp22,2022-12-24
+JuleChamp23,2023-12-24

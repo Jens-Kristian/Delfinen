@@ -2,7 +2,8 @@ package Delfine;
 import java.util.Scanner;
 
 public class Login {
-    public boolean authenticateUser() {
+    public void authenticateUser() {
+        Menu menu = new Menu();
         int maxAttempts = 3;
         String correctCode = "justdrown";
         String correctSecurityCode = "theydrowned";
@@ -15,7 +16,7 @@ public class Login {
 
             if (userCode.equals(correctCode)) {
                 System.out.println("User authenticated. Proceed to main menu.");
-                return true;
+                menu.run();
             } else if (attempts < maxAttempts) {
                 System.out.println("Login failed. Try again.");
             } else {
@@ -25,14 +26,12 @@ public class Login {
 
                 if (securityCode.equals(correctSecurityCode)) {
                     System.out.println("Welcome!");
-                    return true;
+                    menu.run();
                 } else {
                     System.out.println("Login failed.");
-                    break;
                 }
             }
         }
-        scanner.close();
-        return false;
+        System.exit(1);
     }
 }

@@ -4,16 +4,8 @@ import java.util.Scanner;
 
 public class Menu {
 
-    public Scanner scanner = new Scanner(System.in);
-    public CompetitionOperation competitionOperation;
-    public SwimmerOperation swimmerOperation;
-    public Econ econ;
+Scanner scanner = new Scanner(System.in);
 
-    public Menu(CompetitionOperation competitionOperation, SwimmerOperation swimmerOperation, Econ econ) {
-        this.competitionOperation = competitionOperation;
-        this.swimmerOperation = swimmerOperation;
-        this.econ = econ;
-    }
 
     public void printMenu(){
         System.out.println("What do you wish to do?" +
@@ -24,7 +16,9 @@ public class Menu {
     }
 
     public void run() {
-
+        CompetitionOperation competitionOperation = new CompetitionOperation();
+        SwimmerOperation swimmerOperation = new SwimmerOperation();
+        Econ econ = new Econ();
             printMenu();
             int choose = scanner.nextInt();
             scanner.nextLine();

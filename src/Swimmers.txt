@@ -1,0 +1,4 @@
+Hans Ole,69,false,false,Breaststroke,2016-04-01,2023-12-01
+John Cena,46,false,true,Crawl,2020-04-01,2023-12-01
+Anne Møller,36,true,true,Butterfly,2020-10-02,0001-01-01
+Lars Larsen,71,false,false,Megley,2018-05-02,2019-05-02

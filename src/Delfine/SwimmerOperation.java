@@ -10,14 +10,10 @@ public class SwimmerOperation {
     public ArrayList<Competition> competitions;
     public ArrayList<Result> results;
     public Menu menu;
-
-    public void setMenu(Menu menu) {
-        this.menu = menu;
-    }
-
     FileHandling fileHandling = new FileHandling();
 
     public SwimmerOperation() {
+        this.menu = new Menu();
         this.results = fileHandling.results;
         this.swimmers = fileHandling.swimmers;
         this.competitions = fileHandling.competitions;
@@ -94,43 +90,46 @@ public class SwimmerOperation {
     }
 
     public void deleteSwimmer() {
-        boolean swimmerFound = false;
-        boolean isSwimmerDeleted = false;
-        Competition competitionToDelete = null;
-        Result resultToDelete = null;
+        ArrayList<Competition> competitionsToDelete = new ArrayList<>();
         System.out.println("Whats the name off the swimmer ('9' to exit)");
         String name = scanner.nextLine();
-        if (name.equals("9")) swimmerOptions();
-            for (Swimmer swimmer : swimmers) {
-                if (name.equalsIgnoreCase(swimmer.getName())) {
-                    swimmerFound = true;
-                    System.out.println("Are you sure you want to delete " + swimmer.getName() + "? Y/N");
-                    String yesNo = scanner.nextLine();
-                    if (yesNo.equalsIgnoreCase("y")) {
-                        swimmers.remove(swimmer);
-                        for (Result result : results){
-                            if (result.getSwimmerName().equalsIgnoreCase(name)){
-                                for (Competition competition : competitions){
-                                    if (competition.equals(result.getCompetition())){
-                                        competitionToDelete = competition;
-                                    }
-                                }
-                                resultToDelete = result;
-                            }
-                        }
-                        if (resultToDelete != null)results.remove(resultToDelete);
-                        if (competitionToDelete != null)competitions.remove(competitionToDelete);
-                        fileHandling.saveResultsToTxtFile();
-                        fileHandling.saveCompetitionsToTxtFile();
-                        fileHandling.saveSwimmersToTxtFile();
-                        System.out.println("Deletion successful");
-                        swimmerOptions();
-                    } else System.out.println("Deletion cancelled");
+        if (name.equals("9")) {swimmerOptions();}
+
+        Swimmer swimmerToDelete = null;
+        for (Swimmer swimmer : swimmers) {
+            if (name.equalsIgnoreCase(swimmer.getName())) {
+                System.out.println("Are you sure you want to delete " + swimmer.getName() + "? Y/N");
+                String yesNo = scanner.nextLine();
+                if (yesNo.equalsIgnoreCase("y")) {
+                    swimmerToDelete = swimmer;
                 }
             }
-        if (!swimmerFound) System.out.println("Swimmer not found");
+        }
+        if (swimmerToDelete == null) {
+            System.out.println("Swimmer not found, try again");
+            deleteSwimmer();
+        }
+        for (Competition competition : competitions){
+            for (Result result : results){
+                if (competition.getResults().equals(result)){
+                    competitionsToDelete.add(competition);
+                }
+            }
+        }
+        for (Competition competition : competitionsToDelete){
+            System.out.println("deleting : "+competition);
+            competitions.remove(competition);
+        }
+        results.removeIf(result -> result.getSwimmerName().equalsIgnoreCase(name));
+        swimmers.remove(swimmerToDelete);
+        fileHandling.saveResultsToTxtFile();
+        fileHandling.saveCompetitionsToTxtFile();
+        fileHandling.saveSwimmersToTxtFile();
+        System.out.println("Deletion successful");
+
         swimmerOptions();
     }
+
     public Result findBestTrainingTime(Swimmer swimmer) {
         Result bestTrainingResult = null;
         for (Result result : swimmer.getCompetitionHistory()) {
@@ -142,8 +141,8 @@ public class SwimmerOperation {
         return bestTrainingResult;
     }
 
-
     public void search() {
+        Boolean swimmerFound = false;
         int chosenNumber;
         System.out.println("What do you want to search by?" +
                 "\n 1. View full member list" +
@@ -151,7 +150,6 @@ public class SwimmerOperation {
                 "\n 3. See all Competitive swimmers" +
                 "\n 4. See all Active members" +
                 "\n 5. See all Passive members" +
-                "\n 6. See list of all swimmers" +
                 "\n 9. Exit");
         chosenNumber = scanner.nextInt();
         scanner.nextLine(); //scanner bug
@@ -164,7 +162,7 @@ public class SwimmerOperation {
             }
             case 2 -> {
                 System.out.println("Whats the age you want to search?");
-                boolean swimmerFound = false;
+                swimmerFound = false;
                 int age = scanner.nextInt();
                 for (Swimmer swimmer : swimmers) {
                     if (age == swimmer.getAge()) {
@@ -176,42 +174,37 @@ public class SwimmerOperation {
                 swimmerOptions();
             }
             case 3 -> {
+                swimmerFound = false;
                 for (Swimmer swimmer : swimmers) {
                     if (swimmer.isCompetitiveSwimmer()) {
                         System.out.println("Name: "+swimmer.getName()+" Age: "+swimmer.getAge());
-                    } else {
-                        System.out.println("No competitive swimmers found, try again");
-                        search();
+                        swimmerFound = true;
                     }
+                    if (!swimmerFound)System.out.println("No competitive swimmers found");
                 }
                 swimmerOptions();
             }
             case 4 -> {
+                swimmerFound = false;
                 for (Swimmer swimmer : swimmers) {
                     if (swimmer.getMembershipActive()) {
                         System.out.println("Name: "+swimmer.getName()+" Age: "+swimmer.getAge());
-                    } else {
-                        System.out.println("No active member found, try again");
-                        search();
+                        swimmerFound =true;
                     }
+                    if (!swimmerFound)System.out.println("No active member found");
                 }
                 swimmerOptions();
             }
             case 5 -> {
+                swimmerFound = false;
                 for (Swimmer swimmer : swimmers) {
                     if (!swimmer.getMembershipActive()) {
                         System.out.println("Name: "+swimmer.getName()+" Age: "+swimmer.getAge());
-                    } else {
-                        System.out.println("No inactive member found, try again");
-                        search();
+                        swimmerFound = true;
                     }
+                    if(!swimmerFound)System.out.println("No inactive member found");
                 }
                 swimmerOptions();
-            }
-            case 6 -> {
-                for (Swimmer swimmer : swimmers){
-                    System.out.println("Name: "+swimmer.getName()+" Age: "+swimmer.getAge());
-                }
             }
         }
     }
@@ -317,7 +310,7 @@ public class SwimmerOperation {
                             System.out.println("What year?");
                             int year = scanner.nextInt();
                             LocalDate membershibActiveDate = LocalDate.of(year, month, day);
-                            swimmer.setRegistrationDate(membershibActiveDate);
+                            swimmer.setMembershipActiveDate(membershibActiveDate);
                             fileHandling.saveSwimmersToTxtFile();
                             System.out.println("The date membership last got changed from Active/passive is now: "+swimmer.getRegistrationDate());
                             swimmerOptions();
@@ -390,6 +383,7 @@ public class SwimmerOperation {
         System.out.println("New best training time recorded for " + selectedSwimmer.getName());
         swimmerOptions();
     }
+
     public void seeSwimmerDitails(){
         boolean swimmerFound = false;
         System.out.println("Whats the name off the swimmer you want to look op? (9 for exit)");
@@ -406,6 +400,7 @@ public class SwimmerOperation {
             seeSwimmerDitails();
         }swimmerOptions();
     }
+
     public void printSwimmerDitails(Swimmer swimmer) {
         boolean hasCompetedInCompetition = false;
         System.out.println("Name: " + swimmer.getName());

@@ -13,11 +13,6 @@ public class FileHandling {
     public ArrayList<Competition> competitions = new ArrayList<>();
     public ArrayList<Result> results = new ArrayList<>();
 
-    public FileHandling() {
-        readSwimmersFromTxtFile();
-        readCompetitionsFromTxtFile();
-        readResultsFromTxtFile();
-    }
     public void saveSwimmersToTxtFile() {
         try {
             PrintStream ps = new PrintStream(new FileOutputStream("Swimmers.txt"), true);
@@ -113,6 +108,7 @@ public class FileHandling {
             e.printStackTrace();
         }
     }
+
     public void readResultsFromTxtFile() {
         File file = new File("Results.txt");
         try {

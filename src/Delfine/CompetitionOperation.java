@@ -13,15 +13,14 @@ public class CompetitionOperation {
     public ArrayList<Result> results;
     private Menu menu;
 
-    public void setMenu(Menu menu) {
-        this.menu = menu;
-    }
     FileHandling fileHandling = new FileHandling();
     public CompetitionOperation() {
+        this.menu = new Menu();
         this.results = fileHandling.results;
         this.swimmers = fileHandling.swimmers;
         this.competitions = fileHandling.competitions;
     }
+
     public void competitionOptions() {
         fileHandling.readSwimmersFromTxtFile();
         fileHandling.readCompetitionsFromTxtFile();
@@ -70,6 +69,7 @@ public class CompetitionOperation {
         System.out.println("New competition "+name+" is created, date:"+localDate);
         competitionOptions();
     }
+
     public void deleteCompetition(){
         boolean competitionFound = false;
         ArrayList<Result> resultToDelete = new ArrayList<>();
@@ -108,6 +108,7 @@ public class CompetitionOperation {
         fileHandling.saveSwimmersToTxtFile();
         competitionOptions();
     }
+
     public void viewAllCompetitions(){
         for (Competition competition : competitions){
             if (!competition.getNameCompetition().equalsIgnoreCase("Training")){
@@ -116,6 +117,7 @@ public class CompetitionOperation {
         }
         competitionOptions();
     }
+
     public void addResultsToCompetition() {
         System.out.println("Enter the name of the competition:");
         String competitionName = scanner.nextLine();
@@ -202,6 +204,7 @@ public class CompetitionOperation {
         }
         competitionOptions();
     }
+
     public void viewBestTimes() {
         System.out.println("Select the discipline for which you want to view the best times:" +
                 "\n 1. Crawl" +

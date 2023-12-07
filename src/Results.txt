@@ -1,0 +1,2 @@
+Hans Ole,0,17.0,Breaststroke,Training,2017-07-20
+Anne Møller,0,20.0,Butterfly,Training,2022-11-05

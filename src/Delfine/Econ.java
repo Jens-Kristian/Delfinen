@@ -10,11 +10,9 @@ public class Econ {
     public ArrayList<Result> results;
     private Menu menu;
 
-    public void setMenu(Menu menu) {
-        this.menu = menu;
-    }
     FileHandling fileHandling = new FileHandling();
     public Econ() {
+        menu = new Menu();
         this.results = fileHandling.results;
         this.swimmers = fileHandling.swimmers;
         this.competitions = fileHandling.competitions;

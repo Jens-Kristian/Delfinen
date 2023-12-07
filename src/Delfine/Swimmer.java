@@ -5,14 +5,14 @@ import java.util.ArrayList;
 public class Swimmer {
     public  String name;
     public int age;
-    public Boolean membershipActive;
+    public boolean membershipActive;
     public boolean isCompetitiveSwimmer;
     public ArrayList<Result> competitionHistory;
     public String discipline;
     public LocalDate registrationDate;
     public LocalDate membershipActiveDate;
 
-    public Swimmer(String name, int age, Boolean membershipActive, boolean isCompetitiveSwimmer, String discipline, LocalDate registrationDate,LocalDate membershipActiveDate) {
+    public Swimmer(String name, int age, boolean membershipActive, boolean isCompetitiveSwimmer, String discipline, LocalDate registrationDate,LocalDate membershipActiveDate) {
         this.name = name;
         this.age = age;
         this.membershipActive = membershipActive;
